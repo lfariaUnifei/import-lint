@@ -1,4 +1,5 @@
 import 'dart:io' as io;
+import 'dart:io';
 
 import 'package:analyzer/file_system/physical_file_system.dart';
 import 'package:analyzer/src/dart/analysis/analysis_context_collection.dart';
@@ -6,9 +7,11 @@ import 'package:analyzer/src/dart/analysis/driver_based_analysis_context.dart';
 import 'package:analyzer/src/lint/io.dart';
 import 'package:analyzer_plugin/protocol/protocol_common.dart';
 import 'package:cli_util/cli_logging.dart';
-import 'package:import_lint/src/main/create_error_collector.dart';
+import 'package:import_lint/src/infra/analysis_options_reader.dart';
 
 import '../utils.dart';
+import 'error_collector.dart';
+import 'factory/rule-container-factory.dart';
 
 final logger = Logger.standard();
 
@@ -28,7 +31,10 @@ Future<void> run(List<String> args) async {
 
 Future<void> runLinter(DriverBasedAnalysisContext context) async {
   final targetPath = './';
-  final errorCollector = createCollector(context);
+  final optionsFilePath = context.contextRoot.optionsFile?.path;
+  final reader = AnalysisOptionsReader(optionsFile: File(optionsFilePath!));
+  final ruleContainer = RuleContainerFactory(reader);
+  final errorCollector = ErrorCollector(ruleContainer, context);
 
   final files = collectFiles(targetPath)
       .map((file) => absoluteNormalizedPath(file.path))

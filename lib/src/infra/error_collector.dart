@@ -1,5 +1,5 @@
+import 'package:analyzer/dart/analysis/analysis_context.dart';
 import 'package:analyzer/dart/analysis/results.dart';
-import 'package:analyzer/src/dart/analysis/driver_based_analysis_context.dart';
 import 'package:analyzer/src/workspace/pub.dart' show PubWorkspacePackage;
 import 'package:analyzer_plugin/protocol/protocol_common.dart';
 import 'package:import_lint/src/application/import_lint_visitor.dart';
@@ -9,7 +9,7 @@ class ErrorCollector {
   ErrorCollector(this.containerFactory, this.context);
 
   final RuleContainerFactory containerFactory;
-  final DriverBasedAnalysisContext context;
+  final AnalysisContext context;
 
   Future<List<AnalysisError>> collectErrorsFor(String path) async {
     final result = await context.currentSession.getResolvedUnit(path)

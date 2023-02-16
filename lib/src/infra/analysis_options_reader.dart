@@ -1,7 +1,7 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert' as convert;
+import 'dart:io';
 
-import 'package:analyzer/file_system/file_system.dart';
 import 'package:import_lint/src/infra/factory/rule-container-factory.dart';
 import 'package:yaml/yaml.dart' as yaml;
 
