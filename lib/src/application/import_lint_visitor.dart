@@ -1,5 +1,6 @@
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
+import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer_plugin/protocol/protocol_common.dart';
 import 'package:import_lint/src/domain/import.dart';
 import 'package:import_lint/src/domain/rule_container.dart';
@@ -35,14 +36,12 @@ class ImportLintVisitor extends SimpleAstVisitor<void> {
   }
 
   Import? _createImportSource(ImportDirective node) {
-    final encodedSelectedSourceUri = node.selectedSource?.uri.toString();
-
-    if (encodedSelectedSourceUri == null) {
-      return null;
-    }
+    final element = node.element2!;
+    final uri = element.uri as DirectiveUriWithSource;
+    final encodedSelectedSourceUri = uri.source.uri.toString();
 
     return Import.create(
-      uriUsedToImport: node.uriContent!,
+      uriUsedToImport: uri.relativeUriString,
       fullImportPath: Uri.decodeFull(encodedSelectedSourceUri),
       sourceFilePath: toPackagePath(filePath),
     );
